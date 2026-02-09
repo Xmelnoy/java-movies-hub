@@ -77,11 +77,16 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
-        assertTrue(
-                body.startsWith("[") && body.endsWith("]"),
-                "Ожидается JSON-массив"
+        String body = resp.body();
+
+        List<Movie> movies = new Gson().fromJson(body, new ListOfMoviesTypeToken().getType());
+
+        assertEquals(
+                0,
+                movies.size(),
+                "Ожидается пустой Json-массив"
         );
+
     }
 
     @Test
@@ -143,9 +148,7 @@ public class MoviesApiTest {
                 "GET /movies должен вернуть 201"
         );
 
-        String body = resp.body().trim();
-
-        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(resp.body()).getAsJsonObject();
         assertEquals(
                 1,
                 json.get("id").getAsInt(),
@@ -287,9 +290,7 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
-
-        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(resp.body()).getAsJsonObject();
 
         assertTrue(
                 new Movie("first", 1990)
@@ -447,9 +448,12 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
-        assertTrue(
-                body.startsWith("[") && body.endsWith("]"),
+        String body = resp.body();
+
+        List<Movie> movies = new Gson().fromJson(body, new ListOfMoviesTypeToken().getType());
+        assertEquals(
+                2,
+                movies.size(),
                 "Ожидается JSON-массив"
         );
 
@@ -486,9 +490,12 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
-        assertTrue(
-                body.startsWith("[") && body.endsWith("]"),
+        String body = resp.body();
+
+        List<Movie> movies = new Gson().fromJson(body, new ListOfMoviesTypeToken().getType());
+        assertEquals(
+                0,
+                movies.size(),
                 "Ожидается JSON-массив"
         );
 
@@ -525,10 +532,10 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
+        JsonObject json = JsonParser.parseString(resp.body()).getAsJsonObject();
         assertEquals(
                 "Некорректный параметр запроса — 'year'",
-                JsonParser.parseString(body).getAsJsonObject().get("error").getAsString(),
+                json.get("error").getAsString(),
                 "Неверный текст ошибки"
         );
     }
@@ -557,10 +564,10 @@ public class MoviesApiTest {
                 "Content-Type должен содержать формат данных и кодировку"
         );
 
-        String body = resp.body().trim();
+        JsonObject json = JsonParser.parseString(resp.body()).getAsJsonObject();
         assertEquals(
                 "Некорректный параметр запроса — 'year'",
-                JsonParser.parseString(body).getAsJsonObject().get("error").getAsString(),
+                json.get("error").getAsString(),
                 "Неверный текст ошибки"
         );
     }
